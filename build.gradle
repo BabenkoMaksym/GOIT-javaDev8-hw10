@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+    id 'org.flywaydb.flyway' version '9.16.1'
+}
+
+group 'ua.goit.java8.hw10'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    implementation 'org.hibernate:hibernate-core:6.2.0.Final'
+    implementation 'org.postgresql:postgresql:42.6.0'
+    implementation 'org.flywaydb:flyway-core:9.16.1'
+
+
+}
+
+test {
+    useJUnitPlatform()
+}
+
+flyway {
+    url = 'jdbc:postgresql://localhost:5432/homework10'
+    user = 'maksbbn'
+    password = 'qwerty'
+}
+
+task migrateDatabase(dependsOn: 'flywayMigrate') {
+    group = 'Flyway'
+    description = 'Migrates the database to the latest version'
+}
+
+tasks.withType(JavaExec) {
+    finalizedBy migrateDatabase
+}
