@@ -12,31 +12,19 @@ public class Main {
         SessionFactory sessionFactory = new Configuration()
                 .addAnnotatedClass(Client.class)
                 .addAnnotatedClass(Planet.class)
+                .addAnnotatedClass(Ticket.class)
                 .buildSessionFactory();
 
-        ClientCrudService clientCrudService = new ClientCrudService(sessionFactory);
-        PlanetCrudService planetCrudService = new PlanetCrudService(sessionFactory);
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        Ticket ticket = session.get(Ticket.class, 1);
+        transaction.commit();
+        System.out.println(ticket);
 
-        Client client = new Client("Oleg Oleg");
+        TicketCrudService ticketCrudService = new TicketCrudService(sessionFactory);
+        List<Ticket> allTickets = ticketCrudService.getAllTickets();
+        allTickets.forEach(System.out::println);
 
-        clientCrudService.addClient(client);
-        List<Client> allClients = clientCrudService.getAllClients();
-        allClients.forEach(System.out::println);
-
-        Client clientById = clientCrudService.getClientById(12);
-        System.out.println(clientById);
-
-        client.setName("Oleg Oleg Oleg");
-
-        clientCrudService.updateClient(client, 12);
-
-        allClients = clientCrudService.getAllClients();
-        allClients.forEach(System.out::println);
-
-
-        clientCrudService.deleteClientById(12);
-        allClients = clientCrudService.getAllClients();
-        allClients.forEach(System.out::println);
-
+        sessionFactory.close();
     }
 }

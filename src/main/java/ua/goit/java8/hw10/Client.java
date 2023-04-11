@@ -1,9 +1,8 @@
 package ua.goit.java8.hw10;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class Client {
@@ -13,6 +12,9 @@ public class Client {
     private Integer id;
 
     private String name;
+
+    @OneToMany(mappedBy = "client")
+    private List<Ticket> tickets;
 
     public Client() {
     }
@@ -35,6 +37,14 @@ public class Client {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
     }
 
     @Override
